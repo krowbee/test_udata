@@ -11,21 +11,21 @@ def root():
     context= {}
     with open('data.json', 'r') as json_file:
         data = json.load(json_file)
-        for key,value in data.items():
+        for key in data:
             context[key] = data[key]['name']
     return context
             
 
-@app.get('/products/{product_pk}/')
-def product_info(product_pk):
+@app.get('/products/{product_name}/')
+def product_info(product_name:str):
     with open('data.json', 'r') as json_file:
         data = json.load(json_file)
-        context = data[f'{product_pk}']
+        context = data[product_name]
     return context
 
-@app.get('/products/{product_pk}/{product_field}')
-def product_field_info(product_pk:int,product_field:str):
+@app.get('/products/{product_name}/{product_field}')
+def product_field_info(product_name:str,product_field:str):
     with open('data.json', 'r') as json_file:
         data = json.load(json_file)
-        context = data[f'{product_pk}'][f'{product_field}']
+        context = data[product_name][product_field]
     return context

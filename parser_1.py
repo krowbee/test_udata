@@ -1,10 +1,10 @@
 import time
 import requests 
+from slugify import slugify
 from bs4 import BeautifulSoup as bs
 from selenium.webdriver import Chrome
 import json
 
-counter = 1
 start_url = 'https://www.mcdonalds.com/ua/uk-ua/eat/fullmenu.html'
 driver = Chrome()
 
@@ -24,7 +24,6 @@ def get_all_products_urls(start_url):
 def getProductDetailInfoHtml(url):
     try:
         driver.get(url=url)
-        time.sleep(4)
         html = driver.page_source
         return bs(html,'html.parser')
     except Exception as ex:
@@ -100,11 +99,11 @@ def get_list_of_description(info_array):
 def get_all_products_info(urls):
     full_data = {}
 
-    global counter
 
     for url in urls:
-        full_data[counter] = get_product_detail_info(url)
-        counter += 1
+        currentData = get_product_detail_info(url)
+        full_data[slugify(currentData['name'])] = currentData 
+
 
     with open('data.json', 'w') as file:
         json.dump(full_data, file,skipkeys=False, ensure_ascii=True,
